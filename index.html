@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+  <title>Harshdeep Kaur — Product & Engineering</title>
+  <meta name="description" content="Portfolio of Harshdeep Kaur — product management and software engineering work." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Display (headings) + Body -->
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide (icons) -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <!-- Three.js (UMD) -->
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+
+  <style>
+    :root{
+      --bg:#000;
+      --fg:#fff;
+      --muted:#bdbdbd;
+      --gradB: 99,102,241;   /* indigo-500 */
+      --gradC: 244,114,182;  /* pink-400 */
+    }
+    html,body{height:100%;}
+    body{
+      background:var(--bg);
+      color:var(--fg);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      overflow-x:hidden;
+    }
+    .font-display{font-family:Sora, Inter, system-ui, sans-serif;}
+
+    /* NAV: gradient pills with active dot */
+    .nav-wrap{backdrop-filter: blur(8px);}
+    .nav-btn{
+      position:relative; padding:.5rem .9rem; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .nav-btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.32); box-shadow:0 0 0 6px rgba(255,255,255,.06) inset; }
+    .nav-btn:focus-visible{ outline: none; box-shadow: 0 0 0 2px rgba(255,255,255,.85); }
+    .nav-btn[data-active="true"]::after{
+      content:""; position:absolute; inset:auto auto -6px 50%; width:6px; height:6px; translate:-50% 0;
+      border-radius:999px; background:linear-gradient(90deg, rgba(var(--gradB),1), rgba(var(--gradC),1));
+      box-shadow:0 0 14px rgba(var(--gradB),.65);
+    }
+
+    /* HERO */
+    .hero{position:relative; min-height:100svh; display:flex; align-items:center; justify-content:center;}
+    #stars{position:absolute; inset:0; overflow:hidden;}
+    #stars>canvas{display:block; width:100%; height:100%; background:transparent!important;}
+    .hint{position:absolute; left:16px; bottom:16px; font-size:12px; color:#ddd; opacity:.7; pointer-events:none;}
+
+    /* Sections */
+    section{padding:80px 0}
+
+    /* Cards */
+    .card{
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 18px;
+      transition: transform .18s ease, background .2s ease, border-color .2s ease;
+    }
+    .card:hover{
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.16);
+    }
+
+    /* Distinct clickable project look */
+    .linkcard{
+      position:relative; display:block; border-radius:20px; padding:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.10);
+      transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+      transform: perspective(700px) rotateX(0deg) rotateY(0deg);
+      will-change: transform;
+      overflow:hidden;
+    }
+    .linkcard:hover{ border-color: rgba(255,255,255,.25); box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset, 0 10px 30px rgba(0,0,0,.35); }
+    .linkcard::before{
+      content:""; position:absolute; inset:-1px; border-radius:20px;
+      padding:1px; background:linear-gradient(135deg, rgba(var(--gradB),.45), rgba(var(--gradC),.45));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; opacity:.45; pointer-events:none;
+    }
+    .linkcard:hover::before{ opacity:.8; }
+
+    .pill{display:inline-block; padding:.2rem .55rem; border:1px solid rgba(255,255,255,.12); border-radius:999px; font-size:.72rem; color:#ddd;}
+
+    /* CTA chips */
+    .cta-chip{
+      display:inline-block; padding:.35rem .6rem; border-radius:999px;
+      font-size:.75rem; font-weight:600; letter-spacing:.02em;
+      background:conic-gradient(from 180deg at 50% 50%, #7dd3fc, #a78bfa, #f472b6, #7dd3fc);
+      color:#0b1020;
+      box-shadow: 0 6px 24px rgba(130,120,255,.25);
+      transition: transform .15s ease, filter .2s ease;
+    }
+    .cta-chip:hover{ transform: translateY(-1px) scale(1.02); filter:saturate(1.15); }
+
+    /* Profile */
+    .profile-section{text-align:center;}
+    .image-placeholder{
+       width: 250px; height: 250px; border-radius: 50%;
+       background: rgba(255,255,255,0.05);
+       border: 3px dashed rgba(255,255,255,0.2);
+       display: flex; align-items: center; justify-content: center;
+       margin: 0 auto 1rem; font-size: 0.9rem; color: var(--muted);
+    }
+    .profile-image{
+       width: 250px; height: 250px; border-radius: 50%;
+       object-fit: cover; border: 3px solid rgba(255,255,255,0.1); margin-bottom: 1rem;
+    }
+    .about-content{display:flex; flex-direction:column; justify-content:center;}
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="fixed top-0 inset-x-0 z-50 nav-wrap bg-black/50 border-b border-white/10">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="font-display font-extrabold tracking-tight">HK</div>
+      <div class="hidden md:flex items-center gap-3 text-sm">
+        <button class="nav-btn" data-section="about" onclick="scrollToId('about')">About</button>
+        <button class="nav-btn" data-section="experience" onclick="scrollToId('experience')">Work</button>
+        <button class="nav-btn" data-section="projects" onclick="scrollToId('projects')">Projects</button>
+        <button class="nav-btn" data-section="leadership" onclick="scrollToId('leadership')">Leadership</button>
+        <button class="nav-btn" data-section="contact" onclick="scrollToId('contact')">Contact</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO (Galaxy-in-Name → Hover morphs to Tiger) -->
+  <header class="hero" id="home" aria-label="Hero">
+    <div id="stars" aria-hidden="true"></div>
+
+    <div class="absolute top-[22svh] w-full text-center select-none pointer-events-none">
+      <p class="font-display text-sm tracking-[0.35em] uppercase text-white/60">Product • Engineering</p>
+    </div>
+
+    <!-- Socials under the tiger -->
+    <div class="absolute inset-x-0 bottom-28 flex items-center justify-center gap-7 pointer-events-auto">
+      <a class="group inline-flex items-center justify-center rounded-full p-2 hover:bg-white/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+         href="https://github.com/harshdeep-kaurr" target="_blank" rel="noopener" aria-label="GitHub">
+        <i data-lucide="github" class="w-6 h-6 text-white/90 group-hover:text-white"></i>
+      </a>
+      <a class="group inline-flex items-center justify-center rounded-full p-2 hover:bg-white/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+         href="https://www.linkedin.com/in/harshdeep-k/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <i data-lucide="linkedin" class="w-6 h-6 text-white/90 group-hover:text-white"></i>
+      </a>
+      <a class="group inline-flex items-center justify-center rounded-full p-2 hover:bg-white/10 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+         href="mailto:harshdeepk9@gmail.com" aria-label="Email">
+        <i data-lucide="mail" class="w-6 h-6 text-white/90 group-hover:text-white"></i>
+      </a>
+    </div>
+
+    <div class="hint">hover: morphs to tiger • move: stars follow</div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="mb-10">
+        <h2 class="font-display text-3xl md:text-4xl font-extrabold">About Me</h2>
+        <p class="text-white/70 mt-2">Personal background, skills, and professional journey.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="profile-section">
+          <div class="image-placeholder">📸 Add your profile picture here</div>
+          <!-- <img src="your-photo.jpg" alt="Harshdeep Kaur" class="profile-image"> -->
+        </div>
+
+        <div class="about-content">
+          <p class="text-white/80 leading-relaxed mb-6">
+            I build lovable products and reliable systems. Comfortable swapping between discovery, specs, and architecture.
+            I care about clarity, fast feedback loops, and measurable outcomes.
+          </p>
+
+          <div class="card">
+            <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Education & Skills</div>
+            <div class="text-sm text-white/80">
+              <p class="mb-2"><span class="font-semibold">Carnegie Mellon University</span> — B.S. Statistics & ML (’26). Minors: Innovation & Entrepreneurship, CS. Dean’s List with Honors.</p>
+              <p class="mb-2"><span class="font-semibold">Coursework:</span> DSA, PhD ML, Systems, Parallel/Sequential Algorithms, Probability, Modern Regression, Statistical Computing, Methods for DS.</p>
+              <p class="mb-2"><span class="font-semibold">Tech:</span> Python, Java, C/C++, Golang, R, SQL, React; TensorFlow, PyTorch; AWS, GCP; MongoDB; Tableau.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK EXPERIENCE -->
+  <section id="experience">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="mb-10">
+        <h2 class="font-display text-3xl md:text-4xl font-extrabold">Work Experience</h2>
+        <p class="text-white/70 mt-2">What I’ve shipped and where I’ve learned the most.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- Salesforce -->
+        <div class="card">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="font-display font-bold text-xl">Software Engineering Intern — Salesforce</h3>
+              <p class="text-white/60 text-sm">Alibaba Security Engineering • Boston, MA • May–Aug 2025</p>
+            </div>
+          </div>
+          <ul class="text-sm text-white/80 mt-3 space-y-1.5">
+            <li>• Developed JMH-based benchmarking APIs to evaluate SDK performance across AWS, GCP, and Alibaba Cloud.</li>
+            <li>• Worked on a cloud-agnostic storage abstraction (Multi-Substrate SDK) to reduce provider-specific complexity.</li>
+          </ul>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill">Java</span><span class="pill">JMH</span><span class="pill">AWS/GCP/Aliyun</span><span class="pill">Cloud Infra</span>
+          </div>
+        </div>
+
+        <!-- RUCKUS -->
+        <div class="card">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="font-display font-bold text-xl">Product Management Intern — RUCKUS Networks</h3>
+              <p class="text-white/60 text-sm">Sunnyvale, CA • May–Aug 2024</p>
+            </div>
+          </div>
+          <ul class="text-sm text-white/80 mt-3 space-y-1.5">
+            <li>• Proposed ML-driven ICX→AP power allocation; increased switch port utilization from ~33% to near full capacity.</li>
+            <li>• Led cross-functional delivery from requirements to solution; effort resulted in a patent application.</li>
+          </ul>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill">Networking</span><span class="pill">ML</span><span class="pill">Product Spec</span>
+          </div>
+        </div>
+
+        <!-- Georgia Tech -->
+        <div class="card">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="font-display font-bold text-xl">ML Researcher — Georgia Tech</h3>
+              <p class="text-white/60 text-sm">Atlanta, GA • Jun–Oct 2021</p>
+            </div>
+          </div>
+          <ul class="text-sm text-white/80 mt-3 space-y-1.5">
+            <li>• Built CNN for disease classification (TensorFlow, Scikit-learn); 77% accuracy on test set.</li>
+            <li>• Published research on multi-classification challenges and usability trade-offs.</li>
+          </ul>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill">TensorFlow</span><span class="pill">Scikit-learn</span><span class="pill">Research</span>
+          </div>
+        </div>
+
+        <!-- iStart Valley -->
+        <div class="card">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h3 class="font-display font-bold text-xl">Team Lead — iStart Valley (AI & ML Innovation)</h3>
+              <p class="text-white/60 text-sm">San Ramon, CA • Jan–Aug 2022</p>
+            </div>
+          </div>
+          <ul class="text-sm text-white/80 mt-3 space-y-1.5">
+            <li>• Led 20 researchers to design a water-cleansing robot; evaluated classifiers (KNN, Random Forest).</li>
+            <li>• Presented at iStart Valley Digital Conference; won 1st place.</li>
+          </ul>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill">Robotics</span><span class="pill">KNN</span><span class="pill">Random Forest</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="mb-10">
+        <h2 class="font-display text-3xl md:text-4xl font-extrabold">Projects</h2>
+        <p class="text-white/70 mt-2">Hands-on builds, prototypes, and research-driven work.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Marco.ai (Watch video!) -->
+        <a class="linkcard" href="#" target="_blank" rel="noopener">
+          <div class="text-xs uppercase tracking-wider text-white/60 mb-2">AI</div>
+          <h3 class="font-display font-bold text-lg mb-2">Marco.ai — Travel Recommender</h3>
+          <p class="text-white/70 text-sm">36-hour MVP using Groq + GPT-4o. Realtime recs from preferences & geolocation.</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill">LLM</span><span class="pill">Recommender</span><span class="pill">Hackathon</span>
+          </div>
+          <div class="mt-4"><span class="cta-chip">Watch video!</span></div>
+        </a>
+
+        <!-- Stock Market Console (no Open) -->
+        <div class="linkcard">
+          <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Data Apps</div>
+          <h3 class="font-display font-bold text-lg mb-2">Stock Market Console</h3>
+          <p class="text-white/70 text-sm">Interactive console for prices/volume/volatility. Flask + REST, viz in Tableau, Lambda glue.</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill">Flask</span><span class="pill">REST</span><span class="pill">Finance</span>
+          </div>
+        </div>
+
+        <!-- Dynamic Memory Allocator (no Open) -->
+        <div class="linkcard">
+          <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Systems</div>
+          <h3 class="font-display font-bold text-lg mb-2">Dynamic Memory Allocator</h3>
+          <p class="text-white/70 text-sm">Explicit & segregated lists; first/best-fit; utilization improved by removing footers.</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill">C</span><span class="pill">Allocator</span><span class="pill">Systems</span>
+          </div>
+        </div>
+
+        <!-- ML Research (View research paper) -->
+        <a class="linkcard" href="#" target="_blank" rel="noopener">
+          <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Research</div>
+          <h3 class="font-display font-bold text-lg mb-2">CNN for Disease Classification</h3>
+          <p class="text-white/70 text-sm">TensorFlow + Scikit-learn pipeline; 77% test accuracy; paper on multi-class trade-offs.</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill">TensorFlow</span><span class="pill">Scikit-learn</span><span class="pill">CNN</span>
+          </div>
+          <div class="mt-4"><span class="cta-chip">View research paper</span></div>
+        </a>
+
+        <!-- Gram Matrices / Multi-Style Transfer (View research paper) -->
+        <a class="linkcard" href="#" target="_blank" rel="noopener">
+          <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Research</div>
+          <h3 class="font-display font-bold text-lg mb-2">Multi-Style Transfer via Gram Matrices</h3>
+          <p class="text-white/70 text-sm">Averaged Gram losses across styles; cosine similarity on 27 style embeddings; 1000 epochs.</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill">PyTorch</span><span class="pill">NST</span><span class="pill">Embeddings</span>
+          </div>
+          <div class="mt-4"><span class="cta-chip">View research paper</span></div>
+        </a>
+
+        <!-- AP Log Visualization (no Open) -->
+        <div class="linkcard">
+          <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Observability</div>
+          <h3 class="font-display font-bold text-lg mb-2">AP Log Visualization App</h3>
+          <p class="text-white/70 text-sm">Full-stack tool to track & visualize AP logs (MongoDB + Flask + Matplotlib).</p>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <span class="pill">MongoDB</span><span class="pill">Flask</span><span class="pill">Matplotlib</span>
+          </div>
+        </div>
+
+        <!-- Game Theory Placeholder -->
+        <div class="linkcard" style="min-height: 160px; display:flex; align-items:center; justify-content:center;">
+          <div class="text-center text-white/60">
+            <div class="font-display font-semibold mb-1">Game Theory Project</div>
+            <div class="text-sm">[details & link coming soon]</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LEADERSHIP -->
+  <section id="leadership">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="mb-10">
+        <h2 class="font-display text-3xl md:text-4xl font-extrabold">Leadership & Activities</h2>
+        <p class="text-white/70 mt-2">Teams, responsibilities, and impact beyond coursework.</p>
+      </div>
+
+      <div class="space-y-6">
+        <!-- CMU Bhangra -->
+        <div class="card">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <h3 class="font-display font-bold text-xl">Captain, CMU Bhangra</h3>
+              <p class="text-white/60">Carnegie Mellon University</p>
+            </div>
+            <span class="text-white/50 text-sm">Current</span>
+          </div>
+          <p class="text-white/70 mb-3">Led a 40-member competitive team; set end-to-end vision for choreography and performances; coordinated practices, logistics, events; secured top competition placements.</p>
+          <ul class="text-sm text-white/70 space-y-1">
+            <li>• Choreo direction, training plans, and comp logistics</li>
+            <li>• Recruitment, performance quality, and event coordination</li>
+          </ul>
+        </div>
+
+        <!-- Elevate Learning -->
+        <div class="card">
+          <div class="flex justify-between items-start mb-3">
+            <div>
+              <h3 class="font-display font-bold text-xl">Founder, Elevate Learning</h3>
+              <p class="text-white/60">San Ramon, CA</p>
+            </div>
+            <span class="text-white/50 text-sm">2020-2023</span>
+          </div>
+          <p class="text-white/70 mb-3">Built and ran a tutoring service for 20+ students (math, statistics, CS); created lesson plans, managed operations, and mentored on college applications.</p>
+          <ul class="text-sm text-white/70 space-y-1">
+            <li>• Curriculum design and 1:1 mentorship</li>
+            <li>• Scheduling, ops, and outcomes tracking</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT (LinkedIn only) -->
+  <section id="contact">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="font-display text-3xl md:text-4xl font-extrabold mb-6">Get in touch</h2>
+      <a class="card flex items-center gap-4" href="https://www.linkedin.com/in/harshdeep-k/" target="_blank" rel="noopener">
+        <i data-lucide="linkedin" class="w-5 h-5"></i>
+        <div>
+          <div class="font-medium">LinkedIn</div>
+          <div class="text-white/70 text-sm">/in/harshdeep-k/</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer class="py-10 text-center text-white/50">
+    © <span id="year"></span> Harshdeep Kaur
+  </footer>
+
+  <script>
+    // Smooth scroll & active nav state
+    function scrollToId(id){
+      const el = document.getElementById(id);
+      if(el){ el.scrollIntoView({behavior:'smooth'}); setActive(id); }
+    }
+    function setActive(id){
+      document.querySelectorAll('.nav-btn').forEach(btn=>{
+        btn.dataset.active = (btn.dataset.section === id) ? "true" : "false";
+      });
+    }
+    document.getElementById('year').textContent = new Date().getFullYear();
+    window.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); setActive('about'); });
+
+    // Projects tilt interaction
+    document.addEventListener('pointermove', (e)=>{
+      document.querySelectorAll('.linkcard').forEach(card=>{
+        const r = card.getBoundingClientRect();
+        const cx = r.left + r.width/2;
+        const cy = r.top + r.height/2;
+        const dx = (e.clientX - cx) / (r.width/2);
+        const dy = (e.clientY - cy) / (r.height/2);
+        const tiltX = (dy * -4);
+        const tiltY = (dx * 4);
+        card.style.transform = `perspective(700px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+      });
+    });
+    document.addEventListener('pointerleave', ()=> {
+      document.querySelectorAll('.linkcard').forEach(card=> card.style.transform = 'perspective(700px) rotateX(0deg) rotateY(0deg)');
+    }, true);
+  </script>
+
+  <!-- ======= WEBGL: Galaxy inside name → hover morph to tiger ======= -->
+  <script>
+  (function(){
+    if (!window.THREE){ console.error('Three.js not loaded'); return; }
+
+    // ---------- CONFIG ----------
+    const STAR_COUNT = 42000;                 // pixel count
+    const NAME_TEXT  = "Harshdeep";           // your name inside the hero
+    const NAME_FONT  = "800 220px Sora";      // weight size family
+    const NAME_CANVAS_W = 1600;               // internal raster for sampling
+    const NAME_CANVAS_H = 420;
+    const WORLD_W = 70, WORLD_H = 28;         // world size mapped to camera view
+    const BASE_SIZE = 2.0;
+    const MAX_SIZE  = 7.0;                    // on hover
+    const MAX_PX_CAP= 22.0;                   // cap per-dot size in pixels
+
+    const COL_A = new THREE.Color('#8a8a8a');
+    const COL_B = new THREE.Color('#d9d9d9');
+    const TIGER = new THREE.Color('#ffffff');
+
+    // ---------- THREE SETUP ----------
+    const host = document.getElementById('stars');
+    const renderer = new THREE.WebGLRenderer({ antialias:false, alpha:true, premultipliedAlpha:true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(host.clientWidth, host.clientHeight);
+    host.appendChild(renderer.domElement);
+
+    const scene = new THREE.Scene();
+
+    // Camera framed so WORLD_W,H roughly fit viewport
+    const camera = new THREE.PerspectiveCamera(55, host.clientWidth/host.clientHeight, 0.1, 200);
+    camera.position.set(0, 0, 80);
+
+    // ---------- HELPERS ----------
+    function nameMaskTargets(count){
+      const cvs = document.createElement('canvas');
+      cvs.width = NAME_CANVAS_W;
+      cvs.height = NAME_CANVAS_H;
+      const ctx = cvs.getContext('2d');
+      ctx.clearRect(0,0,cvs.width,cvs.height);
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.font = NAME_FONT;
+      ctx.fillText(NAME_TEXT, cvs.width/2, cvs.height/2);
+
+      const { data, width, height } = ctx.getImageData(0,0,cvs.width,cvs.height);
+      const alphaAt = (x,y)=> data[(y*width + x)*4 + 3]/255;
+      const isEdge = (x,y)=>{
+        const a = alphaAt(x,y); if(a < .35) return false;
+        const nx=Math.min(width-1,x+1), px=Math.max(0,x-1);
+        const ny=Math.min(height-1,y+1), py=Math.max(0,y-1);
+        const dif =
+          Math.abs(a - alphaAt(px,y)) +
+          Math.abs(a - alphaAt(nx,y)) +
+          Math.abs(a - alphaAt(x,py)) +
+          Math.abs(a - alphaAt(x,ny));
+        return dif > 0.6;
+      };
+
+      const pts = [], sizes=[];
+      const grid = 3; // sampling stride (smaller = denser)
+      for(let y=0;y<height;y+=grid){
+        for(let x=0;x<width;x+=grid){
+          const a = alphaAt(x,y);
+          if(a > .35){
+            const jx = x + (Math.random()-0.5)*grid*0.7;
+            const jy = y + (Math.random()-0.5)*grid*0.7;
+            const X = (jx/width  - .5) * WORLD_W;
+            const Y = (.5 - jy/height) * WORLD_H;
+            const Z = (Math.random()-0.5)*0.4;
+            pts.push(X,Y,Z);
+
+            // varied dot sizes (smaller near edges)
+            const edge = isEdge(x,y);
+            const bucket = edge ? [0.9,1.0,1.2] : [1.3,1.6,2.0,2.4];
+            sizes.push(bucket[(Math.random()*bucket.length)|0]);
+          }
+        }
+      }
+      // loop/trim to match count
+      const outPos = new Float32Array(count*3);
+      const outSize= new Float32Array(count);
+      for(let i=0;i<count;i++){
+        const k = i % (pts.length/3);
+        outPos[i*3]  = pts[k*3];
+        outPos[i*3+1]= pts[k*3+1];
+        outPos[i*3+2]= pts[k*3+2];
+        outSize[i] = sizes[k % sizes.length];
+      }
+      return { positions: outPos, sizes: outSize };
+    }
+
+    // Build tiger target positions from PNG (dark opaque pixels)
+    function tigerTargets(count, imgSrc, {
+      worldWidth=WORLD_W, worldHeight=WORLD_H, step=2, alphaThreshold=0.5, darkThreshold=0.38
+    }={}){
+      return new Promise((resolve)=>{
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = ()=>{
+          try{
+            const cvs = document.createElement('canvas');
+            const scale = Math.min(1, 900/img.width);
+            cvs.width  = Math.round(img.width*scale);
+            cvs.height = Math.round(img.height*scale);
+            const ctx = cvs.getContext('2d');
+            ctx.drawImage(img,0,0,cvs.width,cvs.height);
+            const { data,width,height } = ctx.getImageData(0,0,cvs.width,cvs.height);
+
+            const isDarkOpaque = (i)=>{
+              const r=data[i]/255, g=data[i+1]/255, b=data[i+2]/255, a=data[i+3]/255;
+              const lum = 0.2126*r + 0.7152*g + 0.0722*b;
+              return (a > alphaThreshold) && (lum < darkThreshold);
+            };
+
+            // bbox
+            let minX=width, maxX=0, minY=height, maxY=0;
+            for(let y=0;y<height;y++){
+              for(let x=0;x<width;x++){
+                const i=(y*width+x)*4;
+                if(isDarkOpaque(i)){
+                  if(x<minX)minX=x; if(x>maxX)maxX=x;
+                  if(y<minY)minY=y; if(y>maxY)maxY=y;
+                }
+              }
+            }
+            if(minX>maxX || minY>maxY){ console.warn('No tiger pixels detected'); resolve(null); return; }
+
+            const pts=[];
+            for(let y=minY;y<=maxY;y+=step){
+              for(let x=minX;x<=maxX;x+=step){
+                const i=(y*width+x)*4;
+                if(isDarkOpaque(i)){
+                  const jx = x + (Math.random()-0.5)*step*0.6;
+                  const jy = y + (Math.random()-0.5)*step*0.6;
+                  const X = (jx/width  - .5) * worldWidth;
+                  const Y = (.5 - jy/height) * worldHeight;
+                  const Z = (Math.random()-0.5)*0.4;
+                  pts.push(X,Y,Z);
+                }
+              }
+            }
+            if(pts.length===0){ console.warn('Tiger sampling empty'); resolve(null); return; }
+
+            const out = new Float32Array(count*3);
+            for(let i=0;i<count;i++){
+              const k = (i % (pts.length/3))*3;
+              out[i*3]=pts[k]; out[i*3+1]=pts[k+1]; out[i*3+2]=pts[k+2];
+            }
+            resolve(out);
+          }catch(e){ console.error('Tiger decode failed', e); resolve(null); }
+        };
+        img.onerror = ()=>{ console.error('Tiger image not found:', imgSrc); resolve(null); };
+        img.src = imgSrc; // must be in same folder: ./tiger_transparent.png
+      });
+    }
+
+    // ---------- GEOMETRY ----------
+    const { positions:namePos, sizes:nameSizes } = nameMaskTargets(STAR_COUNT);
+    const aRand = new Float32Array(STAR_COUNT);
+    for(let i=0;i<STAR_COUNT;i++) aRand[i] = Math.random();
+
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute('position', new THREE.BufferAttribute(namePos, 3));      // galaxy inside your name
+    geom.setAttribute('aTarget',  new THREE.BufferAttribute(namePos, 3));      // placeholder; replace after tiger loads
+    geom.setAttribute('aSize',    new THREE.BufferAttribute(nameSizes, 1));
+    geom.setAttribute('aRand',    new THREE.BufferAttribute(aRand, 1));
+
+    // ---------- UNIFORMS ----------
+    const uniforms = {
+      uTime:       { value: 0 },
+      uMorph:      { value: 0.0 },
+      uMouse:      { value: new THREE.Vector3(0,0,0) },
+      uMouseBoost: { value: 0.0 },
+      uSizeA:      { value: BASE_SIZE * window.devicePixelRatio },
+      uSizeB:      { value: MAX_SIZE  * window.devicePixelRatio },
+      uMaxPx:      { value: MAX_PX_CAP * window.devicePixelRatio },
+      uColA:       { value: COL_A },
+      uColB:       { value: COL_B },
+      uTiger:      { value: TIGER },
+    };
+
+    // ---------- MATERIAL ----------
+    const mat = new THREE.ShaderMaterial({
+      transparent:true,
+      depthWrite:false,
+      blending: THREE.AdditiveBlending,
+      uniforms,
+      vertexShader: `
+        attribute vec3 aTarget;
+        attribute float aRand;
+        attribute float aSize;
+        uniform float uMorph;
+        uniform vec3  uMouse;
+        uniform float uMouseBoost;
+        uniform float uSizeA, uSizeB, uMaxPx;
+        uniform float uTime;
+        varying float vMix;
+        varying float vTiger;
+        void main(){
+          vec3 src = position + vec3(
+            sin(uTime*0.15 + aRand*6.2831)*0.15,
+            cos(uTime*0.18 + aRand*6.2831)*0.15,
+            0.0
+          );
+          float d = distance(uMouse.xy, src.xy);
+          float local = smoothstep(10.0, 0.0, d) * uMouseBoost;
+          float t = clamp(uMorph + local, 0.0, 1.0);
+          vTiger = t;
+
+          vec3 p = mix(src, aTarget, t);
+          vec4 mv = modelViewMatrix * vec4(p, 1.0);
+          gl_Position = projectionMatrix * mv;
+
+          float baseSize = mix(uSizeA, uSizeB, t);
+          gl_PointSize = min((baseSize * aSize) / max(0.0001, -mv.z), uMaxPx);
+          vMix = aRand;
+        }
+      `,
+      fragmentShader: `
+        precision highp float;
+        uniform vec3 uColA, uColB, uTiger;
+        varying float vMix;
+        varying float vTiger;
+        void main(){
+          vec2 uv = gl_PointCoord * 2.0 - 1.0;
+          float r = length(uv);
+          float alpha = 1.0 - smoothstep(0.85, 1.0, r);
+          if (alpha < 0.01) discard;
+
+          vec3 gal = mix(uColA, uColB, vMix);
+          vec3 col = mix(gal, uTiger, vTiger);
+          gl_FragColor = vec4(col, alpha);
+        }
+      `
+    });
+
+    const points = new THREE.Points(geom, mat);
+    scene.add(points);
+
+    // ---------- EVENTS ----------
+    const canvas = renderer.domElement;
+    const ray = new THREE.Raycaster();
+    const plane = new THREE.Plane(new THREE.Vector3(0,0,1), 0);
+    const ndc = new THREE.Vector2(), hit = new THREE.Vector3();
+
+    function updateMouse(clientX, clientY){
+      const rect = canvas.getBoundingClientRect();
+      const x = ((clientX - rect.left)/rect.width) * 2 - 1;
+      const y = -((clientY - rect.top)/rect.height) * 2 + 1;
+      ndc.set(x,y);
+      ray.setFromCamera(ndc, camera);
+      ray.ray.intersectPlane(plane, hit);
+      uniforms.uMouse.value.copy(hit);
+    }
+
+    let hover=false, morph=0;
+
+    canvas.addEventListener('pointerenter', ()=> hover=true);
+    canvas.addEventListener('pointerleave', ()=> hover=false);
+    canvas.addEventListener('pointermove',  (e)=> updateMouse(e.clientX, e.clientY), { passive:true });
+
+    canvas.addEventListener('touchstart', (e)=>{
+      hover=true; const t=e.touches[0]; if(t) updateMouse(t.clientX, t.clientY);
+    }, { passive:true });
+
+    canvas.addEventListener('touchmove', (e)=>{
+      const t=e.touches[0]; if(t) updateMouse(t.clientX, t.clientY);
+    }, { passive:true });
+
+    canvas.addEventListener('touchend', ()=> hover=false, { passive:true });
+
+    // ---------- RESIZE ----------
+    function onResize(){
+      const w = host.clientWidth, h = host.clientHeight;
+      renderer.setSize(w,h,false);
+      camera.aspect = w/h; camera.updateProjectionMatrix();
+    }
+    window.addEventListener('resize', onResize);
+    onResize();
+
+    // ---------- LOAD TIGER TARGETS ----------
+    tigerTargets(STAR_COUNT, "./tiger_transparent.png", {
+      worldWidth: WORLD_W, worldHeight: WORLD_H, step: 2, alphaThreshold: 0.5, darkThreshold: 0.38
+    }).then((tigerPos)=>{
+      if(tigerPos){
+        geom.setAttribute('aTarget', new THREE.BufferAttribute(tigerPos, 3));
+        geom.attributes.aTarget.needsUpdate = true;
+      } else {
+        console.warn('Using name shape as fallback (no tiger).');
+      }
+    });
+
+    // ---------- LOOP ----------
+    const clock = new THREE.Clock();
+    (function animate(){
+      const dt = Math.min(clock.getDelta(), 0.05);
+      uniforms.uTime.value += dt;
+
+      const target = hover ? 1.0 : 0.0;
+      morph += (target - morph) * 0.09;
+      uniforms.uMorph.value = morph;
+
+      const mbTarget = hover ? 1.0 : 0.0;
+      uniforms.uMouseBoost.value += (mbTarget - uniforms.uMouseBoost.value) * 0.18;
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    })();
+  })();
+  </script>
+</body>
+</html>
