@@ -36,15 +36,17 @@
     }
     .font-display{font-family:Sora, Inter, system-ui, sans-serif;}
 
-    /* NAV: gradient pills with active dot */
+    /* NAV: clean buttons with active dot */
     .nav-wrap{backdrop-filter: blur(8px);}
     .nav-btn{
-      position:relative; padding:.5rem .9rem; border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-      transition: transform .15s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+      position:relative; padding:.5rem .9rem;
+      font-family: Sora, Inter, system-ui, sans-serif;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      transition: transform .15s ease, color .2s ease;
     }
-    .nav-btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.32); box-shadow:0 0 0 6px rgba(255,255,255,.06) inset; }
+    .nav-btn:hover{ transform: translateY(-1px); color: #fff; }
     .nav-btn:focus-visible{ outline: none; box-shadow: 0 0 0 2px rgba(255,255,255,.85); }
     .nav-btn[data-active="true"]::after{
       content:""; position:absolute; inset:auto auto -6px 50%; width:6px; height:6px; translate:-50% 0;
@@ -60,9 +62,11 @@
 
     /* Sections */
     section{padding:80px 0}
+    section:first-of-type{padding-top:0; padding-bottom:40px}
 
     /* Cards */
     .card{
+      position: relative; 
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 18px;
@@ -94,7 +98,21 @@
     }
     .linkcard:hover::before{ opacity:.8; }
 
-    .pill{display:inline-block; padding:.2rem .55rem; border:1px solid rgba(255,255,255,.12); border-radius:999px; font-size:.72rem; color:#ddd;}
+    .pill{
+      display:inline-block; 
+      padding:.2rem .55rem; 
+      font-size:.72rem; 
+      color:#ddd;
+      transition: transform .2s ease, color .2s ease;
+      cursor: pointer;
+    }
+    .pill:hover{
+      transform: scale(1.05);
+      color: #fff;
+    }
+    .pill:active{
+      transform: scale(1.1);
+    }
 
     /* CTA chips */
     .cta-chip{
@@ -125,7 +143,7 @@
 </head>
 <body>
   <!-- NAV -->
-  <nav class="fixed top-0 inset-x-0 z-50 nav-wrap bg-black/50 border-b border-white/10">
+  <nav class="fixed top-0 inset-x-0 z-50 nav-wrap bg-red-900/80 border-b border-white/10">
     <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
       <div class="font-display font-extrabold tracking-tight">HK</div>
       <div class="hidden md:flex items-center gap-3 text-sm">
@@ -167,7 +185,7 @@
   <!-- ABOUT -->
   <section id="about">
     <div class="max-w-6xl mx-auto px-6">
-      <div class="mb-10">
+      <div class="mb-6">
         <h2 class="font-display text-3xl md:text-4xl font-extrabold">About Me</h2>
         <p class="text-white/70 mt-2">Personal background, skills, and professional journey.</p>
       </div>
@@ -181,7 +199,7 @@
           <p class="text-white/80 leading-relaxed mb-6">
             Hi! I’m Harshdeep. I get excited about turning ideas into things people can actually use — 
             from the first sketch all the way to something real in people’s hands. I love figuring out how a product should work, building the tech that powers it, and stepping into the user’s shoes to shape how it feels.
-             At the end of the day, I’m happiest when I’m creating something useful, easy to use, and innovative.
+             At the end of the day, I’m happiest when I’m creating something useful, intuitive, and impactful.
           </p>
 
           <div class="card">
@@ -208,6 +226,9 @@
       <div class="grid md:grid-cols-2 gap-6">
         <!-- Salesforce -->
         <div class="card">
+          <div class="absolute top-4 right-4 z-20 pointer-events-none">
+            <img src="salesforcelogo.png" alt="Salesforce" class="w-12 h-8 opacity-90 object-contain drop-shadow">
+          </div>
           <div class="flex items-start justify-between gap-4">
             <div>
               <h3 class="font-display font-bold text-xl">Software Engineering Intern — Salesforce</h3>
@@ -225,6 +246,11 @@
 
         <!-- RUCKUS -->
         <div class="card">
+          <div class="absolute top-4 right-4 z-20 pointer-events-none">
+            <img src="ruckuslogo.png"
+                alt="RUCKUS Networks"
+                class="w-18 h-12 opacity-90 object-contain drop-shadow" />
+          </div>
           <div class="flex items-start justify-between gap-4">
             <div>
               <h3 class="font-display font-bold text-xl">Product Management Intern — RUCKUS Networks</h3>
@@ -240,8 +266,12 @@
           </div>
         </div>
 
+
         <!-- Georgia Tech -->
         <div class="card">
+          <div class="absolute top-4 right-4 z-20 pointer-events-none">
+            <img src="gtlogo.png" alt="Georgia Tech" class="w-12 h-8 opacity-90 object-contain drop-shadow">
+          </div>
           <div class="flex items-start justify-between gap-4">
             <div>
               <h3 class="font-display font-bold text-xl">ML Researcher — Georgia Tech</h3>
@@ -259,6 +289,9 @@
 
         <!-- iStart Valley -->
         <div class="card">
+          <div class="absolute top-4 right-2 z-20 pointer-events-none">
+            <img src="istartvalleylogo.png" alt="iStart Valley" class="w-12 h-8 opacity-90 object-contain drop-shadow">
+          </div>
           <div class="flex items-start justify-between gap-4">
             <div>
               <h3 class="font-display font-bold text-xl">Team Lead — iStart Valley (AI & ML Innovation)</h3>
@@ -288,6 +321,9 @@
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Marco.ai (Watch video!) -->
         <a class="linkcard" href="https://youtu.be/6fHCaBrFe2E" target="_blank" rel="noopener">
+          <div class="absolute top-4 right-4 text-white/40">
+            <i data-lucide="bot" class="w-5 h-5"></i>
+          </div>
           <div class="text-xs uppercase tracking-wider text-white/60 mb-2">AI</div>
           <h3 class="font-display font-bold text-lg mb-2">Marco.ai </h3>
           <p class="text-white/70 text-sm">Travel Recommendation chatbot. 36-hour MVP using Groq + GPT-4o. Realtime recs from preferences & geolocation.</p>
@@ -299,6 +335,9 @@
 
         <!-- Stock Market Console (no Open) -->
         <div class="linkcard">
+          <div class="absolute top-4 right-4 text-white/40">
+            <i data-lucide="trending-up" class="w-5 h-5"></i>
+          </div>
           <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Data Apps</div>
           <h3 class="font-display font-bold text-lg mb-2">TradeLens</h3>
           <p class="text-white/70 text-sm">Interactive console for prices/volume/volatility. Flask + REST, viz in Tableau, Lambda glue.</p>
@@ -309,6 +348,9 @@
 
         <!-- Dynamic Memory Allocator (no Open) -->
         <div class="linkcard">
+          <div class="absolute top-4 right-4 text-white/40">
+            <i data-lucide="memory-stick" class="w-5 h-5"></i>
+          </div>
           <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Systems</div>
           <h3 class="font-display font-bold text-lg mb-2">Dynamic Memory Allocator</h3>
           <p class="text-white/70 text-sm">Explicit & segregated lists; first/best-fit; utilization improved by removing footers.</p>
@@ -319,6 +361,9 @@
 
         <!-- ML Research (View research paper) -->
         <a class="linkcard" href="https://www.jsr.org/preprints/index.php/collegeimpact/preprint/view/71" target="_blank" rel="noopener">
+          <div class="absolute top-4 right-4 text-white/40">
+            <i data-lucide="brain" class="w-5 h-5"></i>
+          </div>
           <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Research</div>
           <h3 class="font-display font-bold text-lg mb-2">CNN for Disease Classification</h3>
           <p class="text-white/70 text-sm">TensorFlow + Scikit-learn pipeline; 77% test accuracy; paper on multi-class trade-offs.</p>
@@ -330,6 +375,9 @@
 
         <!-- Gram Matrices / Multi-Style Transfer (View research paper) -->
         <a class="linkcard" href="styleTransfer.pdf" target="_blank" rel="noopener">
+          <div class="absolute top-4 right-4 text-white/40">
+            <i data-lucide="palette" class="w-5 h-5"></i>
+          </div>
           <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Research</div>
           <h3 class="font-display font-bold text-lg mb-2">Multi-Style Transfer via Gram Matrices</h3>
           <p class="text-white/70 text-sm">Averaged Gram losses across styles; cosine similarity on 27 style embeddings; 1000 epochs.</p>
@@ -341,9 +389,12 @@
 
         <!-- AP Log Visualization (no Open) -->
         <div class="linkcard">
+          <div class="absolute top-4 right-4 text-white/40">
+            <i data-lucide="wifi" class="w-5 h-5"></i>
+          </div>
           <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Observability</div>
-          <h3 class="font-display font-bold text-lg mb-2">AP Log Visualization App</h3>
-          <p class="text-white/70 text-sm">Full-stack tool to track & visualize AP logs (MongoDB + Flask + Matplotlib).</p>
+          <h3 class="font-display font-bold text-lg mb-2">AP Log Visualization Dashboard</h3>
+          <p class="text-white/70 text-sm">Full-stack tool to track & visualize Wi-fi access point logs for debugging (MongoDB + Flask + Matplotlib).</p>
           <div class="mt-3 flex flex-wrap gap-2">
             <span class="pill">MongoDB</span><span class="pill">Flask</span><span class="pill">Matplotlib</span>
           </div>
@@ -351,6 +402,9 @@
 
         <!-- Tech M&A Insights (View research paper) -->
         <a class="linkcard" href="https://www.stat.cmu.edu/capstoneresearch/315files_s24/team25.pdf" target="_blank" rel="noopener">
+          <div class="absolute top-4 right-4 text-white/40">
+            <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+          </div>
           <div class="text-xs uppercase tracking-wider text-white/60 mb-2">Research</div>
           <h3 class="font-display font-bold text-lg mb-2">Tech M&A Insights</h3>
           <p class="text-white/70 text-sm">Analyzed top 50 tech M&A deals with statistical visualizations & analytical techniques, uncovering insights into acquisition desirability, funding impact, and acquisition behavior.</p>
@@ -361,6 +415,9 @@
         </a>
         <!-- Game Theory Placeholder -->
         <div class="linkcard" style="min-height: 160px; display:flex; align-items:center; justify-content:center;">
+          <div class="absolute top-4 right-4 text-white/40">
+            <i data-lucide="gamepad-2" class="w-5 h-5"></i>
+          </div>
           <div class="text-center text-white/60">
             <div class="font-display font-semibold mb-1">Game Theory Project</div>
             <div class="text-sm">[details & link coming soon]</div>
